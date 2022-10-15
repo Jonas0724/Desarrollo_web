@@ -1,0 +1,129 @@
+<? php 
+
+$connect = mysqli_connect('localhost', 'root', 'parcial'); //metodo de conexión a base de datos
+
+$email = isset( $_POST['nombre']) ? $_POST['nombre'] : '';
+$message = isset( $_POST['email']) ? $_POST['email'] : '';
+$message = isset( $_POST['telefono']) ? $_POST['telefono'] : '';
+
+$nombre_error = '';
+$email_error = '';
+$telefono_error = '';
+
+// evaluar el contenido de la información proveniente de las cajas de texto o GUI.
+
+if (count($_POST))
+{
+    $errors = 0;
+
+    if ($_POST['nombre'] == '')
+    {
+        $nombre_error = 'Please enter an email address';
+        $errors ++;
+    }
+
+    if ($_POST['email'] == '')
+    {
+        $email_error = 'Please enter a message';
+        $errors ++;
+    }
+
+    if ($_POST['telefono'] == '')
+    {
+        $telefono_error = 'Please enter a message';
+        $errors ++;
+    }
+
+    if ($errors == 0)
+    {
+
+        $query = 'INSERT INTO contact (
+            email,
+            message
+        ) VALUES (
+            "'.addslashes($_POST['nombre']).'",
+            "'.addslashes($_POST['email']).'",
+            "'.addslashes($_POST['telefono']).'"
+        )';
+    mysquli_query($connect, $query);
+
+    //enviar correo
+    
+    $message = 'You have received a contact form submission:
+        
+nombre: '.$_POST['nombre'].'
+email: '.$_POST['email'];
+telefono: '.$_POST['telefono'];
+
+    mail('jsiesan50@gmail.com',
+        'Contact Form Cubmission',
+        $message );
+
+        //redireccion
+    header('Location: index.html');
+    die();
+
+    }
+}
+
+?>
+
+
+<!doctype html>
+<html>
+    <head>
+        <tittle>PHP Contact Form</tittle>
+    </head>
+    <body>
+    
+        <h1>PHP Contact Form </h1>
+
+        <form method="post" action="">
+
+            your name:
+
+            <br>
+
+            <input type="text" name="email" value="<?php echo $email: ?>">
+
+            <?php echo $email_error; ?>
+
+            <br><br>
+
+            your email:
+
+            <br>
+
+            <input type="text" name="email" value="<?php echo $email: ?>">
+
+            <?php echo $email_error; ?>
+
+            <br><br>
+
+            your mobile number:
+
+            <br>
+
+            <input type="text" name="email" value="<?php echo $email: ?>">
+
+            <?php echo $email_error; ?>
+
+            <br><br>
+
+            Course:
+
+            <br>
+            <textarea name="message"><?php $message; ?></textarea>
+            <?php echo $message_error; ?>
+
+            <br><br>
+
+            <input type="submit" value="Submit">
+
+
+        </form>
+
+        <p>funciona</p>
+
+    </body>
+</html>
